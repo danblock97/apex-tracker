@@ -1,9 +1,12 @@
-import Image from "next/image";
+import SearchBar from "@/components/SearchBar";
+import React from "react";
 
-export default function Home() {
+const Home = () => {
 	return (
-		<div>
-			<h1>Home</h1>
+		<div className="flex items-center justify-center h-screen bg-gray-100">
+			<SearchBar />
 		</div>
 	);
-}
+};
+
+export default Home;
