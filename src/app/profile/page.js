@@ -214,9 +214,9 @@ const Profile = () => {
 											<div className="p-4">
 												<div className="flex items-center mb-4">
 													<div className="mr-4">
-														{segment.metadata.imageUrl ? (
+														{segment.metadata.portraitImageUrl ? (
 															<Image
-																src={segment.metadata.imageUrl}
+																src={segment.metadata.portraitImageUrl}
 																alt={segment.metadata.name}
 																width={48}
 																height={48}
