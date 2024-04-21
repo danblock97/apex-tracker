@@ -9,7 +9,7 @@ export async function GET(req, res) {
 		return;
 	}
 
-	const response = await fetch(
+	const profileResponse = await fetch(
 		`https://public-api.tracker.gg/v2/apex/standard/profile/${platform}/${platformUserIdentifier}`,
 		{
 			headers: {
@@ -18,12 +18,32 @@ export async function GET(req, res) {
 		}
 	);
 
-	if (!response.ok) {
+	if (!profileResponse.ok) {
 		res.status(500).send("Failed to fetch profile data");
 		return;
 	}
 
-	const data = await response.json();
+	const sessionResponse = await fetch(
+		`https://public-api.tracker.gg/v2/apex/standard/profile/${platform}/${platformUserIdentifier}/sessions`,
+		{
+			headers: {
+				"TRN-Api-Key": process.env.TRACKER_API_KEY,
+			},
+		}
+	);
+
+	if (!sessionResponse.ok) {
+		res.status(500).send("Failed to fetch session data");
+		return;
+	}
+
+	const profileData = await profileResponse.json();
+	const sessionData = await sessionResponse.json();
+
+	const data = {
+		profile: profileData.data,
+		sessions: sessionData.data,
+	};
 	return new Response(JSON.stringify(data), {
 		headers: {
 			"Content-Type": "application/json",

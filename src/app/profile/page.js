@@ -6,6 +6,7 @@ import Image from "next/image";
 
 const ProfilePage = () => {
 	const [profileData, setProfileData] = useState(null);
+	const [sessionData, setSessionData] = useState(null);
 	const [error, setError] = useState(null);
 	const router = useRouter();
 
@@ -21,7 +22,11 @@ const ProfilePage = () => {
 					if (!response.ok) throw new Error("Failed to fetch");
 					return response.json();
 				})
-				.then((data) => setProfileData(data.data))
+				.then((data) => {
+					setProfileData(data.profile);
+					setSessionData(data.sessions);
+					console.log("sessionData:", data.sessions); // Log sessionData state
+				})
 				.catch((error) => {
 					setError(error.message || "Failed to fetch data");
 				});
@@ -39,7 +44,40 @@ const ProfilePage = () => {
 	// Get the current rank score to display separately
 	const currentRankScore = profileData?.segments[0]?.stats.rankScore;
 
-	const legendData = profileData?.segments[0]?.metadata?.legends || [];
+	const RankScoreChange = ({ value }) => {
+		const isPositive = value >= 0;
+		const className = `text-lg font-bold ${
+			isPositive ? "text-green-400" : "text-red-400"
+		}`;
+		const displayValue = isPositive ? `+${value}` : value;
+		return <span className={className}>{displayValue}</span>;
+	};
+
+	const getRelativeTime = (date) => {
+		const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+		let interval = seconds / 31536000;
+
+		if (interval > 1) {
+			return Math.floor(interval) + " years ago";
+		}
+		interval = seconds / 2592000;
+		if (interval > 1) {
+			return Math.floor(interval) + " months ago";
+		}
+		interval = seconds / 86400;
+		if (interval > 1) {
+			return Math.floor(interval) + " days ago";
+		}
+		interval = seconds / 3600;
+		if (interval > 1) {
+			return Math.floor(interval) + " hours ago";
+		}
+		interval = seconds / 60;
+		if (interval > 1) {
+			return Math.floor(interval) + " minutes ago";
+		}
+		return Math.floor(seconds) + " seconds ago";
+	};
 
 	return (
 		<div className="min-h-screen bg-gray-700 overflow-hidden">
@@ -143,7 +181,7 @@ const ProfilePage = () => {
 					</section>
 					<section className="mb-8">
 						<div className="relative bg-gray-900 text-white rounded-lg shadow-md overflow-hidden">
-							<div className="bg-yellow-800 bg-opacity-90 px-6 py-4 flex justify-between items-center">
+							<div className="bg-red-800 bg-opacity-90 px-6 py-4 flex justify-between items-center">
 								<h2 className="text-xl font-semibold">Top Legends</h2>
 							</div>
 							<div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -189,6 +227,90 @@ const ProfilePage = () => {
 											</div>
 										</div>
 									))}
+							</div>
+						</div>
+					</section>
+					<section className="mb-8">
+						<div className="relative bg-gray-900 text-white rounded-lg shadow-md overflow-hidden">
+							<div className="bg-red-800 bg-opacity-90 px-6 py-4 flex justify-between items-center">
+								<h2 className="text-xl font-semibold">Recent Matches</h2>
+							</div>
+							<div className="p-6">
+								{sessionData && Array.isArray(sessionData.items) ? (
+									sessionData.items.map((session, sessionIndex) => (
+										<div key={sessionIndex} className="mb-4">
+											<div className="bg-gray-700 px-4 py-2 rounded-t-md">
+												<h3 className="text-lg font-semibold">
+													Session Overview
+												</h3>
+												<span className="text-sm font-medium">
+													{getRelativeTime(session.metadata.startDate.value)}
+												</span>
+											</div>
+											{session.matches.map((match, matchIndex) => (
+												<div
+													key={matchIndex}
+													className="bg-gray-800 p-4 rounded-lg shadow-lg mb-2 flex flex-col md:flex-row justify-between items-center"
+													style={{ fontSize: "calc(10px + 0.5vw)" }}
+												>
+													<div className="flex items-center space-x-4 mb-4 md:mb-0">
+														<img
+															src={match.metadata.characterIconUrl.value}
+															alt={match.metadata.character.displayValue}
+															className="w-12 h-12 rounded-full"
+														/>
+														<div>
+															<div
+																className="font-bold truncate"
+																style={{ maxWidth: "150px" }}
+															>
+																{match.metadata.character.displayValue}
+															</div>
+															<div className="text-gray-400">
+																{getRelativeTime(match.metadata.endDate.value)}
+															</div>
+														</div>
+													</div>
+													<div className="flex flex-col items-center">
+														{match.stats.rankScore && (
+															<>
+																<div className="font-bold">
+																	{match.stats.rankScore.displayValue} RP{" "}
+																	{match.stats.rankScoreChange && (
+																		<RankScoreChange
+																			value={match.stats.rankScoreChange.value}
+																		/>
+																	)}
+																</div>
+															</>
+														)}
+													</div>
+													<div className="flex flex-col items-end">
+														{match.stats.level && (
+															<div>Level: {match.stats.level.displayValue}</div>
+														)}
+														{match.stats.kills && (
+															<div>Kills: {match.stats.kills.displayValue}</div>
+														)}
+														{match.stats.damage && (
+															<div>
+																Damage: {match.stats.damage.displayValue}
+															</div>
+														)}
+														{match.stats.wins && (
+															<div>Wins: {match.stats.wins.displayValue}</div>
+														)}
+													</div>
+												</div>
+											))}
+										</div>
+									))
+								) : (
+									<p>
+										Session data is not available or is not in the expected
+										format.
+									</p>
+								)}
 							</div>
 						</div>
 					</section>
