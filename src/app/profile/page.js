@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import Image from "next/image";
 
 const ProfilePage = () => {
@@ -101,13 +102,15 @@ const ProfilePage = () => {
 						/>
 						<div className="relative bg-opacity-50 bg-black flex items-end p-4 h-[100px] md:h-[100px] lg:h-[200px]">
 							{" "}
-							<Image
-								src={profileData.platformInfo.avatarUrl}
-								alt="Player Icon"
-								width={80}
-								height={80}
-								className="rounded-full"
-							/>
+							{profileData?.platformInfo?.avatarUrl && (
+								<Image
+									src={profileData.platformInfo.avatarUrl}
+									alt="Player Icon"
+									width={80}
+									height={80}
+									className="rounded-full"
+								/>
+							)}
 							<div className="text-white ml-4">
 								<h1 className="text-3xl font-bold">
 									{profileData.platformInfo.platformUserHandle}
@@ -119,12 +122,14 @@ const ProfilePage = () => {
 						<div className="relative bg-gray-900 text-white rounded-lg shadow-md overflow-hidden">
 							<div className="bg-red-800 bg-opacity-90 px-6 py-4 flex justify-between items-center">
 								<div className="flex items-center space-x-4">
-									<Image
-										src={currentRankScore.metadata.iconUrl}
-										alt="Rank Icon"
-										width={40}
-										height={40}
-									/>
+									{currentRankScore?.metadata?.iconUrl && (
+										<Image
+											src={currentRankScore.metadata.iconUrl}
+											alt="Rank Icon"
+											width={40}
+											height={40}
+										/>
+									)}
 									<div className="border-r border-gray-600 pr-4">
 										<div className="text-sm font-medium">
 											{currentRankScore.metadata.rankName}
@@ -139,12 +144,14 @@ const ProfilePage = () => {
 									</div>
 									{peakRankScore && (
 										<div className="flex items-center pl-4">
-											<Image
-												src={peakRankScore.metadata.iconUrl}
-												alt="Peak Rank Icon"
-												width={40}
-												height={40}
-											/>
+											{peakRankScore?.metadata?.iconUrl && (
+												<Image
+													src={peakRankScore.metadata.iconUrl}
+													alt="Peak Rank Icon"
+													width={40}
+													height={40}
+												/>
+											)}
 											<div className="ml-3">
 												<div className="text-sm font-medium">Peak Rank</div>
 												<div className="text-sm font-medium">
@@ -260,13 +267,15 @@ const ProfilePage = () => {
 														className="bg-gray-800 p-4 rounded-lg shadow-lg mb-2 flex flex-col md:flex-row justify-between items-center"
 													>
 														<div className="flex items-center space-x-4 mb-4 md:mb-0">
-															<Image
-																src={match.metadata.characterIconUrl.value}
-																alt={match.metadata.character.displayValue}
-																className="w-12 h-12 rounded-full"
-																width={48}
-																height={48}
-															/>
+															{match.metadata.characterIconUrl?.value && (
+																<Image
+																	src={match.metadata.characterIconUrl.value}
+																	alt={match.metadata.character.displayValue}
+																	className="w-12 h-12 rounded-full"
+																	width={48}
+																	height={48}
+																/>
+															)}
 															<div>
 																<div
 																	className="font-bold truncate"
