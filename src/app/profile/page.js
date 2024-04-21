@@ -39,8 +39,10 @@ const ProfilePage = () => {
 	// Get the current rank score to display separately
 	const currentRankScore = profileData?.segments[0]?.stats.rankScore;
 
+	const legendData = profileData?.segments[0]?.metadata?.legends || [];
+
 	return (
-		<div className="min-h-screen bg-gray-700">
+		<div className="min-h-screen bg-gray-700 overflow-hidden">
 			{" "}
 			{profileData ? (
 				<>
@@ -139,7 +141,59 @@ const ProfilePage = () => {
 							</div>
 						</div>
 					</section>
-					{/* ... other sections ... */}
+					<section className="mb-8">
+						<div className="relative bg-gray-900 text-white rounded-lg shadow-md overflow-hidden">
+							<div className="bg-yellow-800 bg-opacity-90 px-6 py-4 flex justify-between items-center">
+								<h2 className="text-xl font-semibold">Top Legends</h2>
+							</div>
+							<div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+								{profileData.segments
+									.filter(
+										(segment) =>
+											segment.type !== "overview" &&
+											segment.metadata &&
+											segment.stats
+									)
+									.slice(0, 3) // Display only the first 3 legend stats
+									.map((segment, index) => (
+										<div
+											key={index}
+											className="bg-gray-800 rounded-lg shadow-md overflow-hidden"
+										>
+											<div className="p-4">
+												<div className="flex items-center mb-4">
+													<div className="mr-4">
+														<Image
+															src={segment.metadata.imageUrl}
+															alt={segment.metadata.name}
+															width={48}
+															height={48}
+														/>
+													</div>
+													<div>
+														<p className="text-lg font-semibold">
+															{segment.metadata.name}
+														</p>
+														{Object.entries(segment.stats).map(
+															([key, stat]) => (
+																<p key={key} className="text-sm">
+																	<span className="text-gray-400">
+																		{stat.displayName}:{" "}
+																	</span>
+																	<span>{stat.displayValue}</span>
+																</p>
+															)
+														)}
+													</div>
+												</div>
+											</div>
+										</div>
+									))}
+							</div>
+						</div>
+					</section>
+
+					{/* Other sections */}
 				</>
 			) : error ? (
 				<p className="text-red-500">{error}</p>
