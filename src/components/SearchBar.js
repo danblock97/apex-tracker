@@ -2,38 +2,61 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaXbox, FaPlaystation, FaSteam } from "react-icons/fa"; // Platform icons
+
+const platformDetails = {
+	xbl: {
+		icon: <FaXbox className="text-green-600" />,
+		placeholder: "Enter Xbox Live Gamertag",
+	},
+	psn: {
+		icon: <FaPlaystation className="text-blue-600" />,
+		placeholder: "Enter PlayStation Network ID",
+	},
+	origin: {
+		icon: <FaSteam className="text-orange-600" />,
+		placeholder: "Enter Origin Username",
+	},
+};
 
 const SearchBar = () => {
-	const [platform, setPlatform] = useState("");
+	const [platform, setPlatform] = useState("xbl"); // Default to Xbox
 	const [platformUserIdentifier, setPlatformUserIdentifier] = useState("");
 	const router = useRouter();
 
 	const handleSearch = () => {
-		// Navigate to the profile page with platform and platformUserIdentifier as parameters
 		router.push(
 			`/profile?platform=${platform}&identifier=${platformUserIdentifier}`
 		);
 	};
 
 	return (
-		<div className="flex items-center justify-center">
-			<select
-				className="mr-2 p-2 border border-gray-300 rounded"
-				value={platform}
-				onChange={(e) => setPlatform(e.target.value)}
-			>
-				<option value="">Select Platform</option>
-				<option value="xbl">XBL</option>
-				<option value="psn">PSN</option>
-				<option value="origin">Origin</option>
-			</select>
+		<div className="flex items-center justify-center p-4 bg-gray-800 rounded-lg">
+			{/* Platform selection with icons */}
+			<div className="flex items-center mr-2">
+				{Object.entries(platformDetails).map(([key, { icon }]) => (
+					<button
+						key={key}
+						className={`p-2 ${
+							platform === key ? "text-green-500" : "text-gray-500"
+						}`}
+						onClick={() => setPlatform(key)}
+					>
+						{icon}
+					</button>
+				))}
+			</div>
+
+			{/* User identifier input */}
 			<input
-				className="mr-2 p-2 border border-gray-300 rounded"
+				className="flex-1 p-2 mr-2 border border-gray-300 rounded bg-gray-700 text-white placeholder-gray-400"
 				type="text"
-				placeholder="Enter Platform User Identifier"
+				placeholder={platformDetails[platform].placeholder}
 				value={platformUserIdentifier}
 				onChange={(e) => setPlatformUserIdentifier(e.target.value)}
 			/>
+
+			{/* Search button */}
 			<button
 				className="p-2 bg-blue-500 text-white rounded"
 				onClick={handleSearch}
