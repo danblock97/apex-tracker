@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaXbox, FaPlaystation, FaSteam } from "react-icons/fa"; // Platform icons
+import { FaXbox, FaPlaystation } from "react-icons/fa"; // Platform icons
+import { SiOrigin } from "react-icons/si";
 
 const platformDetails = {
 	xbl: {
@@ -14,7 +15,7 @@ const platformDetails = {
 		placeholder: "Enter PlayStation Network ID",
 	},
 	origin: {
-		icon: <FaSteam className="text-orange-600" />,
+		icon: <SiOrigin className="text-orange-600" />,
 		placeholder: "Enter Origin Username",
 	},
 };
@@ -28,6 +29,12 @@ const SearchBar = () => {
 		router.push(
 			`/profile?platform=${platform}&identifier=${platformUserIdentifier}`
 		);
+	};
+
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			handleSearch();
+		}
 	};
 
 	return (
@@ -54,6 +61,7 @@ const SearchBar = () => {
 				placeholder={platformDetails[platform].placeholder}
 				value={platformUserIdentifier}
 				onChange={(e) => setPlatformUserIdentifier(e.target.value)}
+				onKeyDown={handleKeyDown}
 			/>
 
 			{/* Search button */}
