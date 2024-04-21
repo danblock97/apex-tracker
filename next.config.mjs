@@ -7,6 +7,9 @@ const nextConfig = {
 			"avatars.trackercdn.com",
 		],
 	},
+	experimental: {
+		missingSuspenseWithCSRBailout: false,
+	},
 };
 
 export default nextConfig;
