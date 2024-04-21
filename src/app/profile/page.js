@@ -7,11 +7,16 @@ import Image from "next/image";
 const ProfilePage = () => {
 	const [profileData, setProfileData] = useState(null);
 	const [sessionData, setSessionData] = useState(null);
+	const [visibleSessions, setVisibleSessions] = useState(3);
 	const [error, setError] = useState(null);
 	const router = useRouter();
 
 	const platform = useSearchParams().get("platform");
 	const platformUserIdentifier = useSearchParams().get("identifier");
+
+	const loadMoreSessions = () => {
+		setVisibleSessions((prevVisibleSessions) => prevVisibleSessions + 3);
+	};
 
 	useEffect(() => {
 		if (platform && platformUserIdentifier) {
@@ -237,80 +242,101 @@ const ProfilePage = () => {
 							</div>
 							<div className="p-6">
 								{sessionData && Array.isArray(sessionData.items) ? (
-									sessionData.items.map((session, sessionIndex) => (
-										<div key={sessionIndex} className="mb-4">
-											<div className="bg-gray-700 px-4 py-2 rounded-t-md">
-												<h3 className="text-lg font-semibold">
-													Session Overview
-												</h3>
-												<span className="text-sm font-medium">
-													{getRelativeTime(session.metadata.startDate.value)}
-												</span>
-											</div>
-											{session.matches.map((match, matchIndex) => (
-												<div
-													key={matchIndex}
-													className="bg-gray-800 p-4 rounded-lg shadow-lg mb-2 flex flex-col md:flex-row justify-between items-center"
-													style={{ fontSize: "calc(10px + 0.5vw)" }}
-												>
-													<div className="flex items-center space-x-4 mb-4 md:mb-0">
-														<img
-															src={match.metadata.characterIconUrl.value}
-															alt={match.metadata.character.displayValue}
-															className="w-12 h-12 rounded-full"
-														/>
-														<div>
-															<div
-																className="font-bold truncate"
-																style={{ maxWidth: "150px" }}
-															>
-																{match.metadata.character.displayValue}
-															</div>
-															<div className="text-gray-400">
-																{getRelativeTime(match.metadata.endDate.value)}
-															</div>
-														</div>
-													</div>
-													<div className="flex flex-col items-center">
-														{match.stats.rankScore && (
-															<>
-																<div className="font-bold">
-																	{match.stats.rankScore.displayValue} RP{" "}
-																	{match.stats.rankScoreChange && (
-																		<RankScoreChange
-																			value={match.stats.rankScoreChange.value}
-																		/>
+									sessionData.items
+										.slice(0, visibleSessions)
+										.map((session, sessionIndex) => (
+											<div key={sessionIndex} className="mb-4">
+												<div className="bg-gray-700 px-4 py-2 rounded-t-md">
+													<h3 className="text-lg font-semibold">
+														Session Overview
+													</h3>
+													<span className="text-sm font-medium">
+														{getRelativeTime(session.metadata.startDate.value)}
+													</span>
+												</div>
+												{session.matches.map((match, matchIndex) => (
+													<div
+														key={matchIndex}
+														className="bg-gray-800 p-4 rounded-lg shadow-lg mb-2 flex flex-col md:flex-row justify-between items-center"
+													>
+														<div className="flex items-center space-x-4 mb-4 md:mb-0">
+															<Image
+																src={match.metadata.characterIconUrl.value}
+																alt={match.metadata.character.displayValue}
+																className="w-12 h-12 rounded-full"
+																width={48}
+																height={48}
+															/>
+															<div>
+																<div
+																	className="font-bold truncate"
+																	style={{ maxWidth: "150px" }}
+																>
+																	{match.metadata.character.displayValue}
+																</div>
+																<div className="text-gray-400">
+																	{getRelativeTime(
+																		match.metadata.endDate.value
 																	)}
 																</div>
-															</>
-														)}
-													</div>
-													<div className="flex flex-col items-end">
-														{match.stats.level && (
-															<div>Level: {match.stats.level.displayValue}</div>
-														)}
-														{match.stats.kills && (
-															<div>Kills: {match.stats.kills.displayValue}</div>
-														)}
-														{match.stats.damage && (
-															<div>
-																Damage: {match.stats.damage.displayValue}
 															</div>
-														)}
-														{match.stats.wins && (
-															<div>Wins: {match.stats.wins.displayValue}</div>
-														)}
+														</div>
+														<div className="flex flex-col items-center">
+															{match.stats.rankScore && (
+																<>
+																	<div className="font-bold">
+																		{match.stats.rankScore.displayValue} RP{" "}
+																		{match.stats.rankScoreChange && (
+																			<RankScoreChange
+																				value={
+																					match.stats.rankScoreChange.value
+																				}
+																			/>
+																		)}
+																	</div>
+																</>
+															)}
+														</div>
+														<div className="flex flex-col items-end">
+															{match.stats.level && (
+																<div>
+																	Level: {match.stats.level.displayValue}
+																</div>
+															)}
+															{match.stats.kills && (
+																<div>
+																	Kills: {match.stats.kills.displayValue}
+																</div>
+															)}
+															{match.stats.damage && (
+																<div>
+																	Damage: {match.stats.damage.displayValue}
+																</div>
+															)}
+															{match.stats.wins && (
+																<div>Wins: {match.stats.wins.displayValue}</div>
+															)}
+														</div>
 													</div>
-												</div>
-											))}
-										</div>
-									))
+												))}
+											</div>
+										))
 								) : (
 									<p>
 										Session data is not available or is not in the expected
 										format.
 									</p>
 								)}
+								{sessionData &&
+									sessionData.items &&
+									sessionData.items.length > visibleSessions && (
+										<button
+											onClick={loadMoreSessions}
+											className="bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition-colors"
+										>
+											Load More
+										</button>
+									)}
 							</div>
 						</div>
 					</section>
