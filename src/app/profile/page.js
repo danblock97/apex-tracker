@@ -40,9 +40,36 @@ const ProfilePage = () => {
 	const currentRankScore = profileData?.segments[0]?.stats.rankScore;
 
 	return (
-		<div className="container mx-auto px-4 py-8">
+		<div className="min-h-screen bg-gray-700">
+			{" "}
 			{profileData ? (
 				<>
+					{/* Hero section */}
+					<section className="relative mb-8 rounded-lg shadow-md overflow-hidden">
+						<Image
+							src="/images/heroImage1.webp"
+							alt="Hero"
+							layout="fill"
+							objectFit="cover"
+							quality={100}
+							className="absolute inset-0 w-full h-full object-cover"
+						/>
+						<div className="relative bg-opacity-50 bg-black flex items-end p-4 h-[100px] md:h-[100px] lg:h-[200px]">
+							{" "}
+							<Image
+								src={profileData.platformInfo.avatarUrl}
+								alt="Player Icon"
+								width={80}
+								height={80}
+								className="rounded-full"
+							/>
+							<div className="text-white ml-4">
+								<h1 className="text-3xl font-bold">
+									{profileData.platformInfo.platformUserHandle}
+								</h1>
+							</div>
+						</div>
+					</section>
 					<section className="mb-8">
 						<div className="relative bg-gray-900 text-white rounded-lg shadow-md overflow-hidden">
 							<div className="bg-red-800 bg-opacity-90 px-6 py-4 flex justify-between items-center">
@@ -68,25 +95,22 @@ const ProfilePage = () => {
 									{peakRankScore && (
 										<div className="flex items-center pl-4">
 											<Image
-												src={peakRankScore.metadata.iconUrl} // Assuming `iconUrl` exists for peak rank
+												src={peakRankScore.metadata.iconUrl}
 												alt="Peak Rank Icon"
 												width={40}
 												height={40}
 											/>
 											<div className="ml-3">
 												<div className="text-sm font-medium">Peak Rank</div>
+												<div className="text-sm font-medium">
+													{peakRankScore.metadata.rankName}
+												</div>
 												<div className="text-2xl font-bold">
 													{peakRankScore.displayValue} RP
 												</div>
-												{/* Optionally show peak rank details if available */}
 											</div>
 										</div>
 									)}
-								</div>
-								<div className="absolute right-6 top-4">
-									<span className="bg-gray-800 py-1 px-3 rounded-full text-xs font-bold">
-										{profileData.metadata.currentSeason} Season Wins
-									</span>
 								</div>
 							</div>
 							<div className="px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-4">
