@@ -30,7 +30,7 @@ const Navbar = () => {
 						href={"/"}
 						className="text-2xl md:text-3xl text-white font-semibold ml-2"
 					>
-						StatLine
+						Apex Pulse
 					</Link>
 				</div>
 				<div className="mobile-menu block md:hidden">
