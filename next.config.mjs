@@ -5,6 +5,7 @@ const nextConfig = {
 			"images-eds-ssl.xboxlive.com",
 			"trackercdn.com",
 			"avatars.trackercdn.com",
+			"secure.download.dm.origin.com",
 		],
 	},
 	experimental: {
