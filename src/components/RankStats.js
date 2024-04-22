@@ -5,7 +5,10 @@ const RankStats = ({ profileData }) => {
 	const peakRankScore = profileData?.segments?.[0]?.stats?.peakRankScore || {};
 	const filteredStats = profileData
 		? Object.entries(profileData.segments?.[0]?.stats || {}).filter(
-				([key]) => key !== "peakRankScore" && key !== "lifetimePeakRankScore"
+				([key]) =>
+					key !== "peakRankScore" &&
+					key !== "lifetimePeakRankScore" &&
+					key !== "rankScore"
 		  )
 		: [];
 
