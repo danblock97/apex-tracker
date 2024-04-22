@@ -1,12 +1,8 @@
 import Image from "next/image";
 import RankScoreChange from "./RankScoreChange";
+import { calculateRelativeTime } from "@/app/hooks/useRelativeTime";
 
-const RecentMatches = ({
-	sessionData,
-	visibleSessions,
-	loadMoreSessions,
-	getRelativeTime,
-}) => {
+const RecentMatches = ({ sessionData, visibleSessions, loadMoreSessions }) => {
 	return (
 		<div className="relative bg-gray-900 text-white rounded-lg shadow-md overflow-hidden">
 			<div className="bg-red-800 bg-opacity-90 px-6 py-4 flex justify-between items-center">
@@ -23,7 +19,7 @@ const RecentMatches = ({
 								<div className="bg-gray-700 px-4 py-2 rounded-t-md">
 									<h3 className="text-lg font-semibold">Session Overview</h3>
 									<span className="text-sm font-medium">
-										{getRelativeTime(session.metadata.startDate.value)}
+										{calculateRelativeTime(session.metadata.startDate.value)}
 									</span>
 								</div>
 								{session.matches.map((match, matchIndex) => (
@@ -32,9 +28,9 @@ const RecentMatches = ({
 										className="bg-gray-800 p-4 rounded-lg shadow-lg mb-2 flex flex-col md:flex-row justify-between items-center"
 									>
 										<div className="flex items-center space-x-4 mb-4 md:mb-0">
-											{match.metadata.characterIconUrl?.value ? (
+											{match.metadata.legendPortraitImageUrl?.value ? (
 												<Image
-													src={match.metadata.characterIconUrl.value}
+													src={match.metadata.legendPortraitImageUrl.value}
 													alt={match.metadata.character.displayValue}
 													className="w-12 h-12 rounded-full"
 													width={48}
@@ -51,7 +47,7 @@ const RecentMatches = ({
 													{match.metadata.character.displayValue}
 												</div>
 												<div className="text-gray-400">
-													{getRelativeTime(match.metadata.endDate.value)}
+													{calculateRelativeTime(match.metadata.endDate.value)}
 												</div>
 											</div>
 										</div>

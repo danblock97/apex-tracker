@@ -7,12 +7,12 @@ const LegendStats = ({ profileData }) => {
 				<h2 className="text-xl font-semibold">Top Legends</h2>
 			</div>
 			<div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-				{profileData.segments
+				{profileData?.segments
 					.filter(
 						(segment) =>
 							segment.type !== "overview" && segment.metadata && segment.stats
 					)
-					.slice(0, 3) // Display only the first 3 legend stats
+					.slice(0, 3)
 					.map((segment, index) => (
 						<div
 							key={index}
