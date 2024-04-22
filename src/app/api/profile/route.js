@@ -1,3 +1,6 @@
+import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
+
 export async function GET(req, res) {
 	const platform = req.nextUrl.searchParams.get("platform");
 	const platformUserIdentifier = req.nextUrl.searchParams.get(
@@ -15,6 +18,7 @@ export async function GET(req, res) {
 			headers: {
 				"TRN-Api-Key": process.env.TRACKER_API_KEY,
 			},
+			revalidatePath: revalidatePath(req.nextUrl.pathname),
 		}
 	);
 
@@ -29,6 +33,7 @@ export async function GET(req, res) {
 			headers: {
 				"TRN-Api-Key": process.env.TRACKER_API_KEY,
 			},
+			revalidatePath: revalidatePath(req.nextUrl.pathname),
 		}
 	);
 
@@ -44,9 +49,5 @@ export async function GET(req, res) {
 		profile: profileData.data,
 		sessions: sessionData.data,
 	};
-	return new Response(JSON.stringify(data), {
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
+	return NextResponse.json(data);
 }
