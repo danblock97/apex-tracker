@@ -4,11 +4,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 const useProfileData = () => {
 	const [profileData, setProfileData] = useState(null);
 	const [error, setError] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 	const platform = useSearchParams().get("platform");
 	const platformUserIdentifier = useSearchParams().get("identifier");
 
 	useEffect(() => {
+		setIsLoading(true);
 		if (platform && platformUserIdentifier) {
 			fetch(
 				`/api/profile?platform=${platform}&platformUserIdentifier=${platformUserIdentifier}`
@@ -22,11 +24,11 @@ const useProfileData = () => {
 				})
 				.catch((error) => {
 					setError(error.message || "Failed to fetch data");
-				});
+				}).finally(setIsLoading(false));;
 		}
 	}, [router.query, platform, platformUserIdentifier]);
 
-	return { profileData, error };
+	return { profileData, isLoading, error };
 };
 
 export default useProfileData;

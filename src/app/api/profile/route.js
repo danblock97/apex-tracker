@@ -8,8 +8,7 @@ export async function GET(req, res) {
 	);
 
 	if (!platform || !platformUserIdentifier) {
-		res.status(400).send("Missing required parameters");
-		return;
+		throw new Error("Missing required parameters");
 	}
 
 	const profileResponse = await fetch(
@@ -23,8 +22,7 @@ export async function GET(req, res) {
 	);
 
 	if (!profileResponse.ok) {
-		res.status(500).send("Failed to fetch profile data");
-		return;
+		throw new Error("Failed to fetch profile data");
 	}
 
 	const sessionResponse = await fetch(
@@ -38,8 +36,7 @@ export async function GET(req, res) {
 	);
 
 	if (!sessionResponse.ok) {
-		res.status(500).send("Failed to fetch session data");
-		return;
+		throw new Error("Failed to fetch session data");
 	}
 
 	const profileData = await profileResponse.json();
