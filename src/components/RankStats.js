@@ -3,6 +3,8 @@ import Image from "next/image";
 const RankStats = ({ profileData }) => {
 	const currentRankScore = profileData?.segments?.[0]?.stats?.rankScore || {};
 	const peakRankScore = profileData?.segments?.[0]?.stats?.peakRankScore || {};
+	const lifetimePeakRankScore =
+		profileData?.segments?.[0]?.stats?.lifetimePeakRankScore || {};
 	const filteredStats = profileData
 		? Object.entries(profileData.segments?.[0]?.stats || {}).filter(
 				([key]) =>
@@ -29,35 +31,57 @@ const RankStats = ({ profileData }) => {
 
 					<div className="border-r border-gray-600 pr-4">
 						<div className="text-sm font-medium">
+							<div className="text-sm font-medium">Current Rank</div>
 							{currentRankScore?.metadata?.rankName || "Unranked"}
 						</div>
 						<div className="text-2xl font-bold">
 							{currentRankScore?.displayValue || "0"} RP
 						</div>
-						<div className="text-xs">
-							#{currentRankScore?.rank || "N/A"} - Top{" "}
-							{currentRankScore?.percentile || "0"}%
-						</div>
 					</div>
 					{peakRankScore?.value ? (
+						<>
+							<div className="flex items-center pl-4 border-r border-gray-600 pr-4">
+								{peakRankScore.metadata?.iconUrl ? (
+									<Image
+										src={peakRankScore.metadata.iconUrl}
+										alt="Peak Rank Icon"
+										width={40}
+										height={40}
+									/>
+								) : (
+									<div className="bg-gray-400 rounded-full w-10 h-10"></div>
+								)}
+								<div className="ml-3">
+									<div className="text-sm font-medium">Peak Rank</div>
+									<div className="text-sm font-medium">
+										{peakRankScore.metadata?.rankName || "Unranked"}
+									</div>
+									<div className="text-2xl font-bold">
+										{peakRankScore.displayValue || "0"} RP
+									</div>
+								</div>
+							</div>
+						</>
+					) : null}
+					{lifetimePeakRankScore?.value ? (
 						<div className="flex items-center pl-4">
-							{peakRankScore.metadata?.iconUrl ? (
+							{lifetimePeakRankScore.metadata?.iconUrl ? (
 								<Image
-									src={peakRankScore.metadata.iconUrl}
-									alt="Peak Rank Icon"
+									src={lifetimePeakRankScore.metadata.iconUrl}
+									alt="Lifetime Peak Rank Icon"
 									width={40}
 									height={40}
 								/>
 							) : (
-								<div className="bg-gray-400 rounded-full w-10 h-10"></div> // Fallback icon placeholder
+								<div className="bg-gray-400 rounded-full w-10 h-10"></div>
 							)}
 							<div className="ml-3">
-								<div className="text-sm font-medium">Peak Rank</div>
+								<div className="text-sm font-medium">Lifetime Peak Rank</div>
 								<div className="text-sm font-medium">
-									{peakRankScore.metadata?.rankName || "Unranked"}
+									{lifetimePeakRankScore.metadata?.rankName || "Unranked"}
 								</div>
 								<div className="text-2xl font-bold">
-									{peakRankScore.displayValue || "0"} RP
+									{lifetimePeakRankScore.displayValue || "0"} RP
 								</div>
 							</div>
 						</div>

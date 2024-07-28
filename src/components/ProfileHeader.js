@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 const ProfileHeader = ({ profileData }) => {
+	const currentRankScore = profileData?.segments?.[0]?.stats?.rankScore || {};
 	return (
 		<section className="relative mb-8 rounded-lg shadow-md overflow-hidden">
 			<Image
@@ -27,6 +28,10 @@ const ProfileHeader = ({ profileData }) => {
 					<h1 className="text-3xl font-bold">
 						{profileData.platformInfo.platformUserHandle || "Unknown Player"}
 					</h1>
+					<div className="text-xs">
+						#{currentRankScore?.rank || "N/A"} - Top{" "}
+						{currentRankScore?.percentile || "0"}%
+					</div>
 				</div>
 			</div>
 		</section>
